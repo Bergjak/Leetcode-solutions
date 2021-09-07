@@ -1,0 +1,40 @@
+class Solution:
+    def maximalRectangle(self, A: List[List[str]]) -> int:
+        if not A: return 0
+        m, n = len(A), len(A[0])
+        
+        # prefix sum:
+        for i in range(n): A[0][i] = int(A[0][i])
+        for i in range(n):
+            for j in range(1, m):
+                A[j][i] = int(A[j][i])
+                if A[j][i] != 0:
+                    A[j][i] += A[j-1][i]
+        '''
+        prefix sum explanation: say we have columns and rows as follows.
+        010      010
+        010      020
+        001 -->  001
+        001      002
+        001      003
+        So, now as we run through rows in the next loop, we will be able to see what the height of each column is by looking only at each cell in the matrix.
+        '''
+        
+        score = 0
+        for i in range(m):
+            stack = []
+            for j in range(n):
+                
+                if stack and stack[-1][0] > A[i][j]:
+                    while stack and stack[-1][0] > A[i][j]:
+                        height, start = stack.pop()
+                        score = max(score, height * (j - start))
+                    stack.append([A[i][j], start])
+                else:
+                    stack.append([A[i][j], j])
+                    
+            while stack:
+                height, start = stack.pop()
+                score = max(score, height * (n - start))
+        
+        return score
