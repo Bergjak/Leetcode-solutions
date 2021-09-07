@@ -1,0 +1,22 @@
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def minCameraCover(self, root: TreeNode) -> int:
+        self.count = 0
+        
+        def path(node):
+            if not node: return (-1, False)
+            left, p1 = path(node.left)
+            right, p2 = path(node.right)
+            painted = left == 1 or right == 1    
+            paint = int((not p1 and left != -1) or (not p2 and right != -1))
+            if not painted and paint: painted=True
+            self.count += paint
+            return paint, painted
+        res = path(root)
+        if not res[1] and res[0] != 1: self.count += 1
+        return self.count
