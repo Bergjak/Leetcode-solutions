@@ -1,0 +1,29 @@
+class Solution:
+    def findLadders(self, beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
+        if endWord not in wordList: return []
+        
+        all_combos, L = defaultdict(list), len(beginWord)
+        for word in wordList:
+            for i in range(L):
+                all_combos[word[:i] + "*" + word[i+1:]].append(word)
+        
+        cur_level, visited, halt, res, visit_q, next_level = [[beginWord, [beginWord]]], {}, False, [], [], []
+        while cur_level:
+            for word, words in cur_level:
+                for i in range(L):
+                    for w in all_combos[word[:i] + "*" + word[i+1:]]:
+                        if w not in visited:
+                            if w == endWord:
+                                res.append(words + [w])
+                                halt = True
+                            next_level.append((w, words + [w]))
+                            visit_q.append(w)
+            if halt:
+                return res
+            for v in visit_q:
+                visited.setdefault(v, True)
+            visit_q.clear()
+            cur_level = next_level[:]
+            next_level.clear()
+        
+        return res
