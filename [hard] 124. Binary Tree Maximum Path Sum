@@ -1,0 +1,15 @@
+class Solution:
+    def maxPathSum(self, root: TreeNode) -> int:
+        self.best = -float('inf')
+        
+        def dfs(node):
+            if not node: return 0
+            left_sum = dfs(node.left)
+            right_sum = dfs(node.right)
+            total_sum = max(max(left_sum, right_sum) + node.val, node.val)
+            self.best = max(self.best, total_sum, node.val + left_sum + right_sum)
+            return total_sum
+        
+        dfs(root)
+        
+        return self.best
