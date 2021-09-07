@@ -1,0 +1,20 @@
+class Solution:
+    def outerTrees(self, trees: List[List[int]]) -> List[List[int]]:        
+        # First step:
+        start = min(trees)
+        
+        # The cross product of two vectors, which gives us the 
+        def cross(p1, p2, p3):
+            return (p2[0]-p1[0])*(p3[1]-p1[1]) - (p3[0]-p1[0])*(p2[1]-p1[1])
+        
+        # Second step:
+        trees.remove(trees[trees.index(start)])
+        stack = [start]
+        trees.sort(key=lambda v: (atan2(v[1] - start[1], v[0] - start[0]), -v[1], v[0]))
+        
+        # Third step:
+        for p in trees:
+            stack.append(p)
+            while len(stack) > 2 and cross(*stack[-3:]) < 0:
+                stack.pop(-2)
+        return stack
