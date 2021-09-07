@@ -19,7 +19,7 @@ class Solution:
         for u in range(n):
             for v in range(n):
                 if A[u][v] == 1:
-                    A[u][v] = key_v
+                    A[u][v] = key_v 
                     dfs(u, v, key_v)
                     key_v += 1
                     
