@@ -1,0 +1,23 @@
+class Solution:
+    def largestComponentSize(self, nums: List[int]) -> int:
+        big_num = max(nums)
+        p = [i for i in range(big_num+1)]
+        def find(v):
+            if p[v] != v:
+                p[v] = find(p[v])
+            return p[v]
+        
+        def factor(x):
+            for i in range(2, int(sqrt(x)) + 1):
+                if x % i == 0:
+                    p[find(i)] = find(x)
+                    p[find(x//i)] = find(x)
+                        
+        for x in nums:
+            factor(x)
+        p = [i for i in map(find, p)]
+        
+        count = defaultdict(int)
+        for i in nums:
+            count[p[i]] += 1
+        return max(count.values())
