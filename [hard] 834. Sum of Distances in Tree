@@ -1,0 +1,33 @@
+class Solution:
+    def sumOfDistancesInTree(self, n: int, edges: List[List[int]]) -> List[int]:
+        sizes, paths, d = defaultdict(int), defaultdict(list), defaultdict(list)
+        stack, visited = [0], set()
+        for x, y in edges:
+            paths[x].append(y)
+            paths[y].append(x)
+            sizes[x] = sizes[y] = 1
+        while stack:
+            root = stack.pop()
+            if root in visited: continue
+            visited.add(root)
+            for x in paths[root]:
+                if x in visited: continue
+                d[root].append(x)
+                stack.append(x)
+        ans = [0]*n
+        def dfs(node):
+            if not d[node]:
+                sizes[node] = 1
+                return -1
+            scores = [dfs(n) for n in d[node]]
+            ans[0] += sum(abs(x) for x in scores)
+            sizes[node] += sum(sizes[v] for v in d[node])
+            return sum(scores) + n*(node==0) - 1       
+        dfs(0)
+        stack = [0]
+        while stack:
+            parent = stack.pop()
+            for kid in d[parent]:
+                ans[kid] = ans[parent] + n - 2*sizes[kid]  # == ans[parent] - sizes[kid] + (n - sizes[kid) == distance_parent_has -(each node in sub_tree of current node, ie, the kid) + (each node in tree of the parent node modulo the sub_tree of the kid)
+                stack.append(kid)
+        return ans
