@@ -4,7 +4,7 @@ class Solution:
 	# Group num into size 3 substrings, eg, 123456 --> 123, 456
 	# Then you will have a hash table for each size 3 group (eg, thousands, millions, billions)
 	# and within each size 3 group you will have a table for the ones, tens, and hundreds place.
-	# You can have at most 11 characters
+	# You can have at most 11 characters 
 	# 19234567891 --> 19, 234, 567, 891 so we will have group0 = hundreds, group1 = Thousand, group2 = Million, group3 = Billion
 	groups, num = [], list(str(num))
 	start = len(num) % 3
