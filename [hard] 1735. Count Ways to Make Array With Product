@@ -1,0 +1,38 @@
+class Solution:
+    def waysToFillArray(self, queries: List[List[int]]) -> List[int]:
+        '''
+        Stuff regarding primes:
+        '''
+        N = max(j for i, j in queries)
+        primes, primeSet = [False, False] + [True]*(N-1), set()
+        
+        for i in range(2, int(sqrt(N)) + 1):
+            if primes[i]:
+                for J in range(i*i, N+1, i):
+                    primes[J] = False
+        for p, J in enumerate(primes):
+            if J: primeSet.add(p)
+                
+        def pfactor(n, first=True):
+            res = []
+            if first and n in primeSet: res.append(n)
+            for i in range(2, int(sqrt(n)) + 1):
+                if n % i == 0:
+                    t = n//i
+                    if i in primeSet: res.append(i)
+                    if t in primeSet: res.append(t)
+                    res += pfactor(t, first=False)
+                    break
+            return res
+        
+        '''
+        stuff regarding counting:
+        '''
+        ans, MOD = [], 10**9 + 7
+        for n, k in queries:
+            nums = Counter(pfactor(k))
+            cur = 1
+            for x in nums.values():
+                cur *= comb(x+n-1, n-1)
+            ans.append(cur % MOD)
+        return ans
