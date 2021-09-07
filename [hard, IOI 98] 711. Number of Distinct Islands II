@@ -1,0 +1,52 @@
+import numpy as np
+class Solution:
+    def numDistinctIslands2(self, grid: List[List[int]]) -> int:
+        m, n = len(grid), len(grid[0])
+        def dfs(i, j):
+            stack, res = [(i, j)], []
+            miny = minx = float('inf')
+            maxx = maxy = -float('inf')
+            while stack:
+                r, c = stack.pop()
+                for u, v in [(r+1, c), (r-1, c), (r, c+1), (r, c-1)]:
+                    if 0 <= u < m and 0 <= v < n and grid[u][v] == 1:
+                        grid[u][v] = 0
+                        x, y = u-i, v-j
+                        res.append((x, y))
+                        miny, maxy, minx, maxx = min(miny, y), max(maxy, y), min(minx, x), max(maxx, x)
+                        stack.append((u, v))
+            if maxy == -float('inf'):
+                maxy = miny = maxx = minx = 0
+            width  = maxy - miny+1
+            height = maxx - minx+1
+            addx, addy = abs(minx), abs(miny)
+            pic1 = [['0']*width for _ in range(height)]
+            for x, y in res:
+                pic1[x+addx][y+addy] = '1'
+            pic15 = np.flip(pic1, 0).tolist()
+            pic2 = np.rot90(pic1).tolist()
+            pic25 = np.flip(pic2, 0).tolist()
+            pic3 = np.rot90(pic2).tolist()
+            pic35 = np.flip(pic3, 0).tolist()
+            pic4 = np.rot90(pic3).tolist()
+            pic45 = np.flip(pic4, 0).tolist()
+            leg = max(len(pic1), len(pic2), len(pic3), len(pic4))
+            for i in range(leg):
+                if i < len(pic1): pic1[i] = "".join(pic1[i])
+                if i < len(pic2): pic2[i] = "".join(pic2[i])
+                if i < len(pic3): pic3[i] = "".join(pic3[i])
+                if i < len(pic4): pic4[i] = "".join(pic4[i])
+                if i < len(pic15): pic15[i] = "".join(pic15[i])
+                if i < len(pic25): pic25[i] = "".join(pic25[i])
+                if i < len(pic35): pic35[i] = "".join(pic35[i])
+                if i < len(pic45): pic45[i] = "".join(pic45[i])
+                
+            islands.add(tuple(sorted([tuple(pic1), tuple(pic2), tuple(pic3), tuple(pic4), tuple(pic15), tuple(pic25), tuple(pic35), tuple(pic45)])))
+        
+        islands = set()
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == 1:
+                    dfs(i, j)
+        
+        return len(islands)
