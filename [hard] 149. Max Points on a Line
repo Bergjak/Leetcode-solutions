@@ -1,0 +1,15 @@
+class Solution:
+    def maxPoints(self, points: List[List[int]]) -> int:
+        lines, n = defaultdict(int), 0
+        for idx, (x, y) in enumerate(points[:-1]):
+            lines.clear()
+            for (u, v) in points[idx + 1:]:
+                if x != u:
+                    slope = (y - v)/(x - u)
+                    b = (u*y - v*x) / (u - x)
+                else:
+                    slope = float('inf')
+                    b = x
+                lines[(slope, b)] += 1
+                n = max(n, lines[(slope, b)])
+        return n + 1
