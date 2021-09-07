@@ -1,0 +1,35 @@
+class Solution:
+    def largestIsland(self, A: List[List[int]]) -> int:
+        n, colors, key_v = len(A), {}, 2
+        self.ans = 1
+        
+        def dfs(ro, co, key):
+            count = 1
+            stack = [(ro, co)]
+            while stack:
+                r, c = stack.pop()
+                for i, j in [(r+1, c), (r-1, c), (r, c+1), (r, c-1)]:
+                    if 0 <= i < n and 0 <= j < n and A[i][j] == 1:
+                        count += 1
+                        A[i][j] = key
+                        stack.append((i, j))
+            colors[key] = count
+            self.ans = max(self.ans, count)
+        
+        for u in range(n):
+            for v in range(n):
+                if A[u][v] == 1:
+                    A[u][v] = key_v
+                    dfs(u, v, key_v)
+                    key_v += 1
+                    
+        for r in range(n):
+            for c in range(n):  # Need to make sure the keys are not equal and that every possible combo is tried. It's possible that 2 to 4 islands could be connected
+                keys = set()
+                if A[r][c] == 0:
+                    for i, j in [(r+1, c), (r-1, c), (r, c+1), (r, c-1)]:
+                        if 0 <= i < n and 0 <= j < n and A[i][j] > 1:
+                            keys.add(A[i][j])
+                    if keys:
+                        self.ans = max(self.ans, sum(colors[k] for k in keys) + 1)        # + 1 because we color the zero
+        return self.ans
