@@ -1,0 +1,15 @@
+class Solution:
+    def nearestExit(self, A: List[List[str]], entrance: List[int]) -> int:
+        deq = deque([(entrance, 0)])   # Position, num of steps, and previous position
+        n, m = len(A), len(A[0])
+        visited = set([tuple(entrance)])
+        while deq:
+            (r, c), depth = deq.popleft()
+            
+            for i, j in [(r + 1, c), (r - 1, c), (r, c + 1), (r, c - 1)]:
+                if 0 <= i < n and 0 <= j < m and (i, j) not in visited and A[i][j] == '.':
+                    if (i, j) != entrance and (i == 0 or j == 0 or i == n - 1 or j == m -1):
+                        return depth + 1
+                    visited.add((i, j))
+                    deq.append([(i, j), depth + 1])
+        return -1
