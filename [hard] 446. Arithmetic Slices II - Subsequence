@@ -1,0 +1,22 @@
+class Solution:
+    def numberOfArithmeticSlices(self, nums: List[int]) -> int:
+        score = 0
+        
+        for i in range(len(nums)):
+            nums[i] = [nums[i], {}]
+            imfs = {}  # Intermediate frequencies
+            
+            for j in range(i-1, -1, -1):
+                dif = nums[i][0] - nums[j][0]
+                if dif not in nums[i][1]: nums[i][1][dif] = 0
+                a0 = dif/2
+                if a0.is_integer() and a0 in imfs:
+                    nums[i][1][a0] += imfs[a0]
+                    score += imfs[a0]   
+                if dif in nums[j][1]:
+                    nums[i][1][dif] += nums[j][1][dif]
+                    if dif not in imfs: imfs[dif] = 0
+                    imfs[dif] += 1
+                    score += nums[j][1][dif]
+                    
+        return score
