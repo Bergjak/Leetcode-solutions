@@ -1,0 +1,44 @@
+class Solution:
+    def numIslands2(self, m: int, n: int, positions: List[List[int]]) -> List[int]:
+        P, G, ans = {tuple(positions[0]):-1}, defaultdict(list), [1]
+        G[-1].append(tuple(positions[0]))
+        for idx, (x, y) in enumerate(positions[1:]):
+            if (x, y) in P:
+                ans.append(ans[-1])
+                continue
+            # First, see if any of the adjacent spots are already inhabited by islands
+            # If not, then make new island and ans.append(ans[-1]+1)
+            # If so, find the largest such island and merge the other islands into that one (So, you'll need the keys for each island)
+            adjacent_islands = set()
+            
+            for u, v in [(x+1, y), (x-1, y), (x, y+1), (x, y-1)]:
+                if (u, v) in P:
+                    adjacent_islands.add(P[(u, v)])
+                    
+            if not adjacent_islands:
+                P[(x, y)] = idx
+                G[idx].append((x, y))
+                ans.append(ans[-1] + 1)
+                
+            else:
+                # Add in the new point after doing merge
+                winner, merger = -1, -1
+                for k in adjacent_islands:
+                    if len(G[k]) > winner:
+                        winner = len(G[k])
+                        merger = k                
+                # Now, we want to delete the other keys from G and move the points associated with those keys into merger
+                for k in adjacent_islands:
+                    if k != merger:
+                        for u, v in G[k]:
+                            P[(u, v)] = merger
+                            G[merger].append((u, v))
+                        del G[k]
+                P[(x, y)] = merger
+                G[merger].append((x, y))
+                ans.append(ans[-1] + 1 - len(adjacent_islands))
+                
+                
+            
+            
+        return ans
