@@ -1,0 +1,20 @@
+class Solution:
+    def shortestPath(self, grid: List[List[int]], k: int) -> int:
+        # Take every possible path while recording how many walls need to be broken, then return the best path which has a number of walls less than k
+        m, n, visited = len(grid), len(grid[0]), set()
+        if m == n == 1: return 0
+        stack = deque([(0,0,0,1)]) # row, col, number_of_broken walls, steps
+        while stack:
+            r, c, walls, steps = stack.popleft()   # If walls > k then get rid of it
+            
+            for u, v in [(r+1, c), (r-1, c), (r, c+1), (r, c-1)]:
+                # We have to store number_of_broken_walls as part of the state, since there may exist multiple trajectories to get to the same point
+                # yet some trajectories may involve differing numbers of broken walls.
+                if 0 <= u < m and 0 <= v < n and (u, v, walls) not in visited:
+                    visited.add((u, v, walls))                    
+                    w = walls
+                    if grid[u][v]: w += 1
+                    if w > k: continue
+                    if u == m-1 and v == n-1: return steps
+                    stack.append((u, v, w, steps+1))
+        return -1
