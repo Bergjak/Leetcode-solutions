@@ -1,0 +1,36 @@
+class Solution:
+    def minimumMoves(self, grid: List[List[int]]) -> int:
+        n, visited = len(grid), set()
+        # just follow the head and keep a bool that tells you orientation of snake
+        # # If True, then snake is like .. ; if False, then snake is like :
+        stack = deque([(0, 1, True, 1)])  # row, column, orientation, steps
+        
+        while stack:
+            r, c, flat, steps = stack.popleft() 
+            
+            if flat:  # snake is like ..
+                if r + 1 < n and 0 < c < n and grid[r+1][c] == 0 == grid[r+1][c-1]:
+                    # Snake can only finish if flat
+                    if (r+1, c-1, False) not in visited:   #flip
+                        visited.add((r+1, c-1, False))
+                        stack.append([r+1, c-1, False, steps+1])
+                    if (r+1, c, True) not in visited:  # move down while flat
+                        if (r+1, c) == (n-1, n-1): return steps
+                        visited.add((r+1, c, True))
+                        stack.append([r+1, c, True, steps+1])
+                if c + 1 < n and grid[r][c+1] == 0 and (r, c+1, True) not in visited:  # move right while flat
+                    if (r, c+1) == (n-1, n-1): return steps
+                    visited.add((r, c+1, True))
+                    stack.append([r, c+1, True, steps+1])
+            else:
+                if 0 < r < n and c + 1 < n and grid[r-1][c+1] == 0 == grid[r][c+1]:                    
+                    if (r-1, c+1, True) not in visited:
+                        visited.add((r-1, c+1, True))
+                        stack.append([r-1, c+1, True, steps+1])
+                    if (r, c+1, False) not in visited:
+                        visited.add((r, c+1, False))
+                        stack.append([r, c+1, False, steps+1])
+                if r + 1 < n and grid[r+1][c] == 0 and (r+1, c, False) not in visited:
+                    visited.add((r+1, c, False))
+                    stack.append([r+1, c, False, steps+1])
+        return -1
