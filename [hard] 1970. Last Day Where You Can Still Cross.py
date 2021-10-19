@@ -4,14 +4,10 @@ class Solution:
         # We could binary search our day number: l = 1, r = len(cells)
         # mid would then be the day we update to in the array cells
 
-        l = 0
-        r = len(cells)
-
         dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
         mat = [[0] * n for _ in range(m)]
 
         def search(idx):
-
             visited = set()
             q = deque([(0, i) for i in range(n) if mat[0][i] == 0])
 
@@ -27,7 +23,8 @@ class Solution:
             return False
 
         old_mid = 0
-        old_search_result = 123
+        l = 0
+        r = len(cells)
 
         # I think I will end up returning l
         while l + 1 < r:
@@ -37,7 +34,6 @@ class Solution:
                 for idx in range(old_mid, mid):
                     u, v = cells[idx]
                     mat[u - 1][v - 1] = 1
-
             else:
                 for idx in range(old_mid - 1, mid - 1, -1):
                     u, v = cells[idx]
@@ -47,7 +43,6 @@ class Solution:
 
             if search_result:  # This is the case if updating matrix up to cells[mid] still allows for reaching bottom of grid
                 l = mid
-
             else:
                 r = mid
 
