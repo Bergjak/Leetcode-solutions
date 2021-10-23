@@ -20,7 +20,7 @@ class DinnerPlates:
 
         self.right_keys = []
         # Has -key vals, inserted into here once popped off from left_keys and a keys is put in here whenever
-        # a stack has some shit put in it
+        # a stack has some stuff put in it
 
         self.cap = capacity
 
