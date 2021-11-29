@@ -24,18 +24,15 @@ class Solution:
             for i in range(n):
                 if not mask & (1 << i) and needed[i] & mask == needed[i]:
                     not_taken_and_can_take.append(i)
-
-            combos = []
+                    
             for combo_size in range(1, k + 1):
-                combos.extend(itertools.combinations(not_taken_and_can_take, combo_size))
+                for combo in itertools.combinations(not_taken_and_can_take, combo_size):
+                    
+                    mask0 = mask
+                    for i in combo:
+                        mask0 |= 1 << i
 
-            for combo in combos:
-
-                mask0 = mask
-                for i in combo:
-                    mask0 |= 1 << i
-
-                ans = min(ans, dp(mask0) + 1)
+                    ans = min(ans, dp(mask0) + 1)
 
             return ans
 
