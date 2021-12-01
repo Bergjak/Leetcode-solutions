@@ -5,7 +5,7 @@ class Solution:
         '''
         The general idea in this program is to treat each power of 10 of the equation as its own level, as this
         makes the backtracking process much faster than just enumerating all possible maps from letters to numbers.
-        So, when I saw a "level of the equation," what I mean is all i for chars[i][level] and result[level].
+        So, when I say a "level of the equation," what I mean is all i for chars[i][level] and result[level].
         Every character on that "level" maps to a number that will be multiplied by 10**level. Then in the backtrack,
         since it is possible that the current levels are not equal because the equality requires input from the next
         higher level, I pass to the next level if and only if Left_hand_side % 10**level == Right_hand_side % 10**level
