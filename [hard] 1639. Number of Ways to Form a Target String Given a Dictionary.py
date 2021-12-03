@@ -27,6 +27,8 @@ class Solution:
 
         for j in range(1, len(target)):
             for i in range(j, n):
+                                # This counts prefixes of target               
                 levels[j][i] = (levels[j - 1][i - 1] * frequency[i][target[j]] + levels[j][i - 1]) % MOD
-
+                                                                             # ^^^This is just for prefix sum, to speed up the algorithm
+                    
         return levels[-1][-1] % MOD
