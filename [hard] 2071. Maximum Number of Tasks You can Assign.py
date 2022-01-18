@@ -11,7 +11,7 @@ class Solution:
             # So, I take the smallest size tasks and then reverse that prefix array
             to_do_list = tasks[:size][::-1]
             P = p
-            employees = workers.copy()
+            employees = workers[-size:]
 
             # Now, iterate through the to do list, checking the largest tasks first
             for task in to_do_list:
@@ -42,7 +42,7 @@ class Solution:
 
         # We can perform binary search on the number of doable tasks because, if we can do x tasks,
         # then we can do x - i tasks for i < x. So, we just find the largest possible x and return it.
-        l, r = 0, n
+        l, r = 0, min(n, m)
         while l < r:
             mid = (l + r + 1) // 2
 
